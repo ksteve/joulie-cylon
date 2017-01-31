@@ -43,7 +43,7 @@ Cylon.robot({
 Cylon.api(
     'socketio',
     {
-        host: 'https://joulie-cylon.herokuapp.com/',
+        host: '0.0.0.0',
         port: PORT
 });
 
