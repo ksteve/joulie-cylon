@@ -9,7 +9,6 @@ Cylon.robot({
     name: 'kyle',
     events: ['test', 'status', 'hello'],
 
-
     connections: {
         nest: { adaptor: "nest", accessToken: "c.k9ESFrVN5RRMohA9drUlQRc5VINAUgdJUXKd1HK8aVveAWB6snK6wMvMN2zImZ8GlJIeqtcrxPofkUXePQdyWMqcnkPRYO5x6TYOEBgbVjiUnhBdczmh9TeEdCAfiR0pysSGkOwyjYKtn5gI" }
     },
@@ -24,17 +23,13 @@ Cylon.robot({
         // this will trigger an event that
         // we'll to listen to in the client
         my.on('hello', function () {
-            console.log('received [hello] event');
+            my.emit('test');
         });
 
         // Listen to the status event to obtain all thermostat
         //
         my.thermostat.on("status", function(data) {
             my.emit('status', data);
-        });
-
-        every((20).seconds(), function(){
-            my.emit('test');
         });
 
     }
