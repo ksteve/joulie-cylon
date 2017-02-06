@@ -10,7 +10,7 @@ Cylon.robot({
     name: 'kyle',
     
     //setup robotos events
-    events: ['test', 'status', 'hello'],
+    events: ['test', 'status', 'hello', 'set_target_temp'],
 
     connections: {
         //setup connection to nest adaptor
@@ -23,6 +23,10 @@ Cylon.robot({
     },
 
     work: function(my) {
+        
+        my.on('set_target_temp', function (data) {
+           my.thermostat.targetTemperatureC(data);
+        });
 
         my.on('hello', function () {
             my.emit('test');
