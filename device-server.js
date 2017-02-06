@@ -11,6 +11,17 @@ Cylon.robot({
     
     //setup robotos events
     events: ['test', 'status', 'hello', 'set_target_temp'],
+    
+        commands: function() {
+        return {
+            set_temp: this.setTemp
+        };
+    },
+    
+    setTemp: function(targetTemp) {
+        var a = parseInt(targetTemp);
+        this.thermostat.targetTemperatureC(a);
+    },
 
     connections: {
         //setup connection to nest adaptor
