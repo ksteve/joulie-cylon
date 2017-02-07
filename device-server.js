@@ -65,6 +65,8 @@ Cylon.robot({
 Cylon.api(
     'http',
     {
+        ssl: false,
+        host: '127.0.0.1',
         port: PORT
 });
 
