@@ -3,9 +3,9 @@
 
 var PORT = process.env.PORT || 3000;
 var Cylon = require('cylon');
-//var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
+var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
 
-//ServerSocket.emit('data publish', 'test data')
+ServerSocket.emit('data publish', 'test data')
 
 Cylon.robot({
 
@@ -51,7 +51,7 @@ Cylon.robot({
             console.log('test emit');
 
             my.emit('test');
-            //ServerSocket.emit('data publish', 'test data')
+            ServerSocket.emit('data publish', 'test data')
         });
 
         // Listen to the status event to obtain all thermostat data
@@ -65,7 +65,6 @@ Cylon.robot({
 Cylon.api(
     'http',
     {
-        ssl: false,
         port: PORT
 });
 
