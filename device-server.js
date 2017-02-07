@@ -14,17 +14,22 @@ Cylon.robot({
     
     //setup robotos events
     events: ['test', 'status', 'hello', 'set_target_temp'],
-    
-        commands: function() {
+
+    commands: function() {
         return {
-            set_temp: this.setTemp
+            create_device: this.createDevice,
+            remove_device: this.removeDevice
         };
     },
-    
-    setTemp: function(targetTemp) {
-        var a = parseInt(targetTemp);
-        this.thermostat.targetTemperatureC(a);
+
+    createDevice: function(opts) {
+        var y = opts.name;
     },
+
+    removeDevice: function(opts) {
+        var y = opts.name;
+    },
+
 
     connections: {
         //setup connection to nest adaptor
@@ -58,9 +63,9 @@ Cylon.robot({
 });
 
 Cylon.api(
-    'socketio',
+    'http',
     {
-        host: '0.0.0.0',
+        ssl: false,
         port: PORT
 });
 
