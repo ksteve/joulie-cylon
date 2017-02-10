@@ -4,13 +4,17 @@
   "description": "joulie server component for interacting with devices",
   "main": "device-server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha --reporter spec"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cylon": "^1.3.0",
+    "cylon": "https://github.com/ksteve/cylon/tarball/master",
     "cylon-api-http": "^0.4.1",
     "cylon-nest": "^0.10.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   }
 }
