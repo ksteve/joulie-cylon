@@ -1,1 +1,1 @@
-web: node device-server.js
+web: node server.js
