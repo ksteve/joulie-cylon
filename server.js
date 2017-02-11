@@ -25,7 +25,7 @@ Cylon.api(
 });
 
 function createRobotCmd(opts){
-    Cylon.robot({
+    return Cylon.robot({
         //setup robots name
         name: opts.name,
 
@@ -47,17 +47,21 @@ function createRobotCmd(opts){
         createDeviceCmd: function(opts) {
             var self = this;
 
-            self.connection(opts.conn_name,
-                {adaptor: opts.adaptor, accessToken: opts.token});
-            self.startConnection(self.connections[opts.conn_name], function () {
+            //create the connection
+            self.connection(opts.conn_name, {adaptor: opts.adaptor, accessToken: opts.token});
 
-            });
+            //craete the device
+            self.device(opts.device_name, {connection: opts.conn_name, driver: opts.driver, UUID: uuidV4()});
 
-            self.device(opts.device_name,
-                {connection: opts.conn_name, driver: opts.driver, UUID: uuidV4()});
-            self.startDevice(self.devices[opts.device_name], function() {
-                console.log("Device Ready");
-                return self.devices[opts.device_name];
+            //start the connection
+            self.startConnection(self.connections[opts.conn_name], function (err) {
+
+                if(err) return err;
+                //start the device
+                self.startDevice(self.devices[opts.device_name], function() {v
+                    console.log("Device Ready");
+                    return self.devices[opts.device_name];
+                });
             });
         },
 
@@ -82,7 +86,6 @@ function createRobotCmd(opts){
             }));
         }
     });
-    return "bot created";
 };
 
 //remove a robot
