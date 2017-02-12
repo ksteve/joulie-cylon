@@ -54,11 +54,10 @@ function createRobotCmd(opts){
             self.device(opts.device_name, {connection: opts.conn_name, driver: opts.driver, UUID: uuidV4()});
 
             //start the connection
-            self.startConnection(self.connections[opts.conn_name], function (err) {
+            self.startConnection(self.connections[opts.conn_name], function () {
 
-                if(err) return err;
                 //start the device
-                self.startDevice(self.devices[opts.device_name], function() {v
+                self.startDevice(self.devices[opts.device_name], function() {
                     console.log("Device Ready");
                     return self.devices[opts.device_name];
                 });
