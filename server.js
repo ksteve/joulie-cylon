@@ -25,6 +25,7 @@ Cylon.api(
 });
 
 function createRobotCmd(opts){
+    console.log(opts);
     return Cylon.robot({
         //setup robots name
         name: opts.name,
@@ -45,6 +46,7 @@ function createRobotCmd(opts){
 
         //create new device
         createDeviceCmd: function(opts) {
+            console.log(opts);
             var self = this;
 
             //create the connection
@@ -62,10 +64,13 @@ function createRobotCmd(opts){
                     return self.devices[opts.device_name];
                 });
             });
+
+
         },
 
         //remove device function
         removeDeviceCmd: function(opts) {//
+            console.log(opts);
             var device = this.devices[opts.name];//
             this.removeDevice(device, function(){
               return "removed";
@@ -89,6 +94,7 @@ function createRobotCmd(opts){
 
 //remove a robot
 function removeRobotCmd(opts){
+    console.log(opts);
     return Cylon.MCP.remove(opts);
 };
 
