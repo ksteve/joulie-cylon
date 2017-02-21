@@ -6,6 +6,7 @@ var PORT = process.env.PORT || 3000;
 var Cylon = require('cylon');
 var _ = Cylon.Utils;
 var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
+var http = require("http");
 
 ServerSocket.emit('data publish', 'test data');
 
@@ -103,6 +104,10 @@ Cylon.MCP.commands = {
     create_robot: createRobotCmd,
     remove_robot: removeRobotCmd
 };
+
+setInterval(function(){
+    http.get("http://joulie-core.herokuapp.com");
+}, 60 * 5000);
 
 module.exports.create_robot = createRobotCmd;
 module.exports.remove_robot = removeRobotCmd;
