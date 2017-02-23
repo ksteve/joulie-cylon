@@ -1,14 +1,13 @@
 'use strict';
 
-const uuidV4 = require("uuid/v4");
-
 var PORT = process.env.PORT || 3000;
 var Cylon = require('cylon');
-var _ = Cylon.Utils;
-var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
 var http = require("http");
 
+var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
 ServerSocket.emit('data publish', 'test data');
+
+const uuidV4 = require("uuid/v4");
 
 //allow robots to auto start on initialization
 Cylon.config({
@@ -25,92 +24,32 @@ Cylon.api(
         port: PORT
 });
 
-function createRobotCmd(opts){
-    console.log(opts);
-    return Cylon.robot({
-        //setup robots name
-        name: opts.name,
+Cylon.robot({
+    name: "Test",
 
-        //generate random UUID
-        UUID: uuidV4(),
+    UUID: uuidV4(),
 
-        //setup robotos events
-        events: ['test', 'hello'],
+    events: ['test', 'hello'],
+    connections: {},
+    devices: {},
 
-        //setup robots commands
-        commands: function() {
-            return {
-                create_device: this.createDeviceCmd,
-                remove_device: this.removeDeviceCmd
-            };
-        },
+    //a reference to timers which can be cleared on halt
+    timers: [],
 
-        //create new device
-        createDeviceCmd: function(opts) {
-            console.log(opts);
-            var self = this;
+    work: function(my) {
+        my.timers.push(every((1).minutes(), function() {
+            console.log(my.name);
+            ServerSocket.emit('data publish', {kw: 10});
+        }));
+    }
 
-            //create the connection
-            self.connection(opts.conn_name, {adaptor: opts.adaptor, accessToken: opts.token});
-
-            //craete the device
-            self.device(opts.device_name, {connection: opts.conn_name, driver: opts.driver, UUID: uuidV4()});
-
-            //start the connection
-            self.startConnection(self.connections[opts.conn_name], function () {
-
-                //start the device
-                self.startDevice(self.devices[opts.device_name], function() {
-                    console.log("Device Ready");
-                    return self.devices[opts.device_name];
-                });
-            });
-
-
-        },
-
-        //remove device function
-        removeDeviceCmd: function(opts) {//
-            console.log(opts);
-            var device = this.devices[opts.name];//
-            this.removeDevice(device, function(){
-              return "removed";
-            });
-        },
-
-        connections: {},
-        devices: {},
-
-        //a reference to timers which can be cleared on halt
-        timers: [],
-
-        work: function(my) {
-            my.timers.push(every((1).minutes(), function() {
-                console.log(my.name);
-                ServerSocket.emit('data publish', {kw: 10});
-            }));
-        }
-    });
-};
-
-//remove a robot
-function removeRobotCmd(opts){
-    console.log(opts);
-    return Cylon.MCP.remove(opts);
-};
-
-//setup MCP commnds
-Cylon.MCP.commands = {
-    create_robot: createRobotCmd,
-    remove_robot: removeRobotCmd
-};
+});
 
 setInterval(function(){
     http.get("http://joulie-core.herokuapp.com");
 }, 60 * 5000);
 
-module.exports.create_robot = createRobotCmd;
-module.exports.remove_robot = removeRobotCmd;
+
 module.exports.Cylon = Cylon;
 
 
