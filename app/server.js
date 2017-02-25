@@ -14,6 +14,7 @@ Cylon.config({
     mode: 'auto'
 });
 
+
 //setup cylon http api
 //todo - ssl (security)
 Cylon.api(
@@ -24,6 +25,7 @@ Cylon.api(
         port: PORT
 });
 
+//setup test robot
 Cylon.robot({
     name: "Test",
 
@@ -49,6 +51,11 @@ setInterval(function(){
     http.get("http://joulie-core.herokuapp.com");
 }, 60 * 5000);
 
+//initialize all robots
+Cylon.MCP.commands["init-cylon"] = function(){
+    console.log("init");
+    return 'init';
+};
 
 module.exports.Cylon = Cylon;
 
