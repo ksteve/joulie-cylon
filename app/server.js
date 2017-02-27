@@ -1,7 +1,7 @@
 'use strict';
 
 var PORT = process.env.PORT || 3000;
-var Cylon = require('../cylon');
+var Cylon = require('cylon');
 var http = require("http");
 var commands = require("./commands");
 const uuidV4 = require("uuid/v4");
@@ -28,7 +28,6 @@ Cylon.robot({
     name: "Test",
 
     UUID: uuidV4(),
-
     events: ['test', 'hello'],
     connections: {},
     devices: {},
@@ -52,15 +51,9 @@ setInterval(function(){
 
 //initialize all robots
 Cylon.MCP.commands["init-cylon"] = function(opts){
-
-    var self = this;
+    //var self = this;
     return commands.initCylon(Cylon, opts)
 };
-
-commands.initCylon(Cylon, null);
-var test = Cylon.MCP.robots['bot'];
-console.log(Cylon.MCP.remove({name: 'bot'}));
-test = Cylon.MCP.robots['bot'];
 
 module.exports.Cylon = Cylon;
 
