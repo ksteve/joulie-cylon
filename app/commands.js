@@ -2,7 +2,7 @@
  * Created by Kyle on 2017-02-24.
  */
 
-let _ = require("lodash");
+var _ = require("lodash");
 
 module.exports = {
     initCylon : function(Cylon, opts){

@@ -1,7 +1,7 @@
 'use strict';
 
 var PORT = process.env.PORT || 3000;
-var Cylon = require('cylon');
+var Cylon = require('./../cylon');
 var http = require("http");
 var commands = require("./commands");
 const uuidV4 = require("uuid/v4");
