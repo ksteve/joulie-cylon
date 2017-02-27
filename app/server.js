@@ -1,7 +1,7 @@
 'use strict';
 
 var PORT = process.env.PORT || 3000;
-var Cylon = require('./../cylon/index');
+var Cylon = require('../cylon');
 var http = require("http");
 var commands = require("./commands");
 const uuidV4 = require("uuid/v4");
@@ -58,15 +58,9 @@ Cylon.MCP.commands["init-cylon"] = function(opts){
 };
 
 commands.initCylon(Cylon, null);
-
 var test = Cylon.MCP.robots['bot'];
-
 console.log(Cylon.MCP.remove({name: 'bot'}));
-
-
 test = Cylon.MCP.robots['bot'];
-
-console.log(test);
 
 module.exports.Cylon = Cylon;
 
