@@ -5,17 +5,62 @@
 let _ = require("lodash");
 
 module.exports = {
+    initCylon : function(Cylon, opts){
+        return new Promise(function(resolve, reject){
 
-    initCylon : function(opts){
+            opts = {
+                Robots : [
+                    {
+                        name : 'bot',
 
-        opts = {
-            Robots : [
+                        connections: {
+                            loopback: {adaptor: "loopback"},
+                        },
 
-            ]
-        };
+                        devices: {
+                            loopback: {driver: 'ping', connection: 'loopback'}
+                        },
 
-        let robots = JSON.parse(opts);
-        _.forEach(robots,function(value){
+                        work: function (my) {
+                            my.connections;
+                            // {
+                            //   loopback: [Connection],
+                            //   arduino:  [Connection]
+                            // }
+
+                            my.arduino;  // [Connection]
+                            my.loopback; // [Device]
+                        }
+                    },
+                    {
+                        connections: {
+                            loopback: {adaptor: "loopback"},
+                        },
+
+                        devices: {
+                            loopback: {driver: 'ping', connection: 'loopback'}
+                        },
+
+                        work: function (my) {
+                            my.connections;
+                            // {
+                            //   loopback: [Connection],
+                            //   arduino:  [Connection]
+                            // }
+
+                            my.arduino;  // [Connection]
+                            my.loopback; // [Device]
+                        }
+                    }
+                ]
+            };
+
+            // let robots = JSON.parse(opts);
+            _.forEach(opts.Robots,function(bot){
+                Cylon.robot(bot);
+            });
+
+            resolve("all robots started");
 
         });
     }

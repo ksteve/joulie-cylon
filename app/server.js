@@ -1,19 +1,17 @@
 'use strict';
 
 var PORT = process.env.PORT || 3000;
-var Cylon = require('cylon');
+var Cylon = require('./../cylon/index');
 var http = require("http");
-
+var commands = require("./commands");
+const uuidV4 = require("uuid/v4");
 var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
 ServerSocket.emit('data publish', 'test data');
-
-const uuidV4 = require("uuid/v4");
 
 //allow robots to auto start on initialization
 Cylon.config({
     mode: 'auto'
 });
-
 
 //setup cylon http api
 //todo - ssl (security)
@@ -39,9 +37,10 @@ Cylon.robot({
     timers: [],
 
     work: function(my) {
-        my.timers.push(every((1).minutes(), function() {
+        my.timers.push(every((5).minutes(), function() {
             console.log(my.name);
-            ServerSocket.emit('data publish', {kw: 10});
+            var energy = Math.floor((Math.random() * 100) + 20);
+            ServerSocket.emit('data publish', {kw: energy});
         }));
     }
 
@@ -52,10 +51,22 @@ setInterval(function(){
 }, 60 * 5000);
 
 //initialize all robots
-Cylon.MCP.commands["init-cylon"] = function(){
-    console.log("init");
-    return 'init';
+Cylon.MCP.commands["init-cylon"] = function(opts){
+
+    var self = this;
+    return commands.initCylon(Cylon, opts)
 };
+
+commands.initCylon(Cylon, null);
+
+var test = Cylon.MCP.robots['bot'];
+
+console.log(Cylon.MCP.remove({name: 'bot'}));
+
+
+test = Cylon.MCP.robots['bot'];
+
+console.log(test);
 
 module.exports.Cylon = Cylon;
 
