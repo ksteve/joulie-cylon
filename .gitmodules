@@ -1,3 +1,9 @@
 [submodule "cylon"]
 	path = cylon
 	url = https://github.com/ksteve/cylon
+[submodule "cylon-wemo"]
+	path = cylon-wemo
+	url = https://github.com/ksteve/cylon-wemo.git
+[submodule "cylon-api-http"]
+	path = cylon-api-http
+	url = https://github.com/ksteve/cylon-api-http.git
