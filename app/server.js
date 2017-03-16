@@ -1,7 +1,7 @@
 'use strict';
 
 var PORT = process.env.PORT || 3000;
-var Cylon = require('cylon');
+var Cylon = require('./../cylon');
 var http = require("http");
 var commands = require("./commands");
 const uuidV4 = require("uuid/v4");
@@ -29,8 +29,15 @@ Cylon.robot({
 
     UUID: uuidV4(),
     events: ['test', 'hello'],
-    connections: {},
-    devices: {},
+    connections: {
+     //   wemo: {adaptor: "wemo", ip:'192.168.2.23', port:49153},
+     //   tplink : {adaptor: "tplink", ip:"192.168.2.22"}
+    },
+
+    devices: {
+     //   wemoSwitch: { driver: "wemo", connection: "wemo"},
+     //   tplinkSwitch: {driver: "tplink", connection: "tplink"}
+    },
 
     //a reference to timers which can be cleared on halt
     timers: [],
@@ -39,21 +46,28 @@ Cylon.robot({
         my.timers.push(every((5).minutes(), function() {
             console.log(my.name);
             var energy = Math.floor((Math.random() * 100) + 20);
-            ServerSocket.emit('data publish', {kw: energy});
+
+            // my.switch.on('insightParams', function(){
+            //     console.log("hello");
+            // });
         }));
     }
 
 });
 
-setInterval(function(){
-    http.get("http://joulie-core.herokuapp.com");
-}, 60 * 5000);
-
-//initialize all robots
-Cylon.MCP.commands["init-cylon"] = function(opts){
+//setup MCP commands
+Cylon.MCP.commands["init_cylon"] = function(opts){
     //var self = this;
     return commands.initCylon(Cylon, opts)
 };
+
+// setInterval(function(){
+//     http.get("http://joulie-core.herokuapp.com", function(res){
+//         if(res) {
+//             //console.log(res);
+//         }
+//     });
+// }, 60 * 5000);
 
 module.exports.Cylon = Cylon;
 

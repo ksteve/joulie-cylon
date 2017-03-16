@@ -1,0 +1,5 @@
+./cylon/spec/helper ./cylon/spec/lib/*.js
+./cylon-api-http/spec/helper ./cylon-api-http/spec/lib/*.js
+./cylon-tplink/spec/helper ./cylon-tplink/spec/lib/*.js
+./cylon-wemo/spec/helper ./cylon-wemo/spec/lib/*.js
+./test/*.js

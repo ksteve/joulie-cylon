@@ -98,7 +98,7 @@ API.prototype.configureMiddleware = function configureMiddleware() {
 
   // extracts command params from request
   this.express.use(function(req, res, next) {
-    req.commandParams = _.values(req.body);
+    req.commandParams = req.body;
     return next();
   });
 
