@@ -6,8 +6,6 @@ var server      = require("./../app/server");
 var should      = chai.should();
 var expect      = chai.expect();
 
-
-
 chai.use(chaiHttp);
 
 describe("api", function() {
