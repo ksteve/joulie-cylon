@@ -61,6 +61,7 @@ Cylon.MCP.commands["init_cylon"] = function(opts){
     return commands.initCylon(Cylon, opts)
 };
 
+
 // setInterval(function(){
 //     http.get("http://joulie-core.herokuapp.com", function(res){
 //         if(res) {
