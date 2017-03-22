@@ -1,0 +1,17 @@
+/**
+ * Created by Kyle on 2017-03-22.
+ */
+module.exports = {
+    MALFORMED_JSON:1
+    ,ONLY_JSON_OBJECTS:2
+    ,MISSING_BODY:3
+    ,MISSING_FIELD:4
+    ,BAD_DATA_TYPE:5
+    ,TOO_LONG:6
+    ,DEVICE_NOT_FOUND:7
+    ,DEVICE_NOT_EXIST:8
+    ,ROBOT_NOT_FOUND:9
+    ,ROBOT_NOT_EXIST:10
+    ,MISSING_TOKEN:11
+    ,REQUEST_FAILED:13
+};

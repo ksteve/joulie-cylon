@@ -3,20 +3,21 @@
  */
 
 var _ = require("lodash");
+var errors = require("./../errors");
 
 module.exports = {
-    initCylon : function initCylon(opts){
+    resetRobots : function initCylon(opts) {
         var Cylon = this;
-        return new Promise(function(resolve, reject){
+        return new Promise(function (resolve, reject) {
 
-            if(!opts){
+            if (!opts) {
                 reject(new Error("no json"));
             }
 
             opts = {
-                Robots : [
+                Robots: [
                     {
-                        name : 'bot',
+                        name: 'bot',
 
                         connections: {
                             loopback: {adaptor: "loopback"},
@@ -61,50 +62,92 @@ module.exports = {
             };
 
             // let robots = JSON.parse(opts);
-            _.forEach(opts.Robots,function(bot){
+            _.forEach(opts.Robots, function (bot) {
                 Cylon.robot(bot);
             });
             resolve("all robots started");
         });
     },
+    resetRobot : function resetRobot(opts) {
+        return new Promise(function (resolve, reject) {
 
-    resetRobot : function resetRobot(opts){
-      return new Promise(function(resolve, reject){
-
-      })
-    },
-
-    createDevice : function createDevice(opts){
-
-        var Cylon = this;
-
-        return new Promise(function(resolve, reject){
-            var conn_name = opts.name;
-
-            var conn = {name: opts.name, adaptor: opts.type, ip : opts.ip, port: opts.port };
-            // this.connections[conn_name] = conn;
-
-            var dev = {};
-            dev.name = opts.name;
-            dev.driver = opts.type;
-            dev.connection = conn.name;
-
-            this.connection(conn_name, conn);
-
-            //craete the device
-            this.device(dev.name, dev);
-
-            //start the connection
-            this.startConnection(conn, function () {
-                //start the device
-                self.startDevice(dev, function() {
-                    console.log("Device Ready");
-                    return self.devices[dev.name];
-                });
-            });
         })
+    },
+    createRobot : function createRobot(opts) {
+        var MCP = this;
+
+        function createDevice(opts) {
+            var robot = this;
+
+            return new Promise(function (resolve, reject) {
+
+                try {
+                    var conn_name = opts.name;
+                    var conn = {adaptor: opts.type, ip: opts.ip, port: opts.port};
+
+                    var dev_name = opts.name;
+                    var dev = {driver: opts.type, connection: conn_name};
+
+                    robot.connection(conn_name, conn);
+                    robot.device(dev_name, dev);
+                } catch(err){
+                    console.log(err);
+                }
+
+                //start the connection
+                robot.startConnection(robot.connections[conn_name], function () {
+                    //start the device
+                    robot.startDevice(robot.devices[dev_name], function () {
+                        resolve(self.devices[dev.name]);
+                    });
+                });
+            })
+        };
+
+        function deleteDevice(opts){
+            return new Promise(function(resolve,reject) {
+                console.log(opts);
+                var self = this;
+
+                var device = self.devices[opts.name];
+                if (!device) {
+                    reject({
+                        code:errors.DEVICE_NOT_FOUND,
+                        message: "device: " + opts.name + " not found"
+                    });
+                }
+
+                var connection = device.connection;
+                if (connection) {
+                    this.removeConnection(connection, function () {
+                        console.log("connection removed");
+                    });
+                }
+
+                this.removeDevice(device, function () {
+                    console.log("device removed");
+                });
+
+                resolve("device removed");
+            });
+        }
+
+        return new Promise(function (resolve, reject) {
+            if (!opts.name) {
+                reject({code: errors.MISSING_FIELD, message: "JSON must specify name"});
+            }
+
+            //create the robot
+            try {
+                var bot = MCP.create(opts);
+                bot.commands = {
+                    create_device: createDevice,
+                    remove_device: deleteDevice
+                }
+            } catch (err) {
+                console.log(err);
+            }
+            resolve({message: "Robot Created"});
+        });
     }
-
-
-
 };

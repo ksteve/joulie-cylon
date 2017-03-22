@@ -17,7 +17,7 @@ describe("api", function() {
                 .post('/api/commands/create_robot')
                 .send({name: 'botty'})
                 .end(function (err, res) {
-                    console.log(res.body);
+                    //console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.have.all.keys('success', 'result');
                     res.body.success.should.be.equal(true);
@@ -42,6 +42,25 @@ describe("api", function() {
     });
 
     describe("/POST Remove Robot", function() {
+        var bot = {name: "test_bot"};
+        beforeEach(function(){
+            server.Cylon.robot(bot);
+        });
+
+        it("should remove a robot",function(){
+            chai.request(localhost)
+                .post('/api/commands/remove_robot')
+                .send({ name: bot.name})
+                .end(function (err, res) {
+                    //console.log(res.body);
+                    res.should.have.status(200);
+                    res.body.should.have.all.keys('success', 'result');
+                    res.body.success.should.be.equal(true);
+                    server.Cylon.MCP.robots[bot.name].should.be.equal(undefined);
+                    done();
+                });
+
+        });
 
     });
 
@@ -66,16 +85,17 @@ describe("api", function() {
     });
 
     describe("/POST Remove Device", function(){
-        it("should create a new wemo device", function (done) {
+        it("should remove a wemo device", function (done) {
             chai.request(localhost)
                 .post('/api/robots/Test/commands/remove_device')
                 .send({name: 'wemo'})
                 .end(function (err, res) {
+                    err.should.equal(null);
                     console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.have.all.keys('success', 'result');
                     res.body.success.should.be.equal(true);
-                    server.Cylon.devices.wemo.should.be.undefined;
+                    server.Cylon.devices.wemo.should.be.equal(undefined);
                     done();
                 })
                 .catch(function(err){
@@ -83,6 +103,25 @@ describe("api", function() {
                     done()
                 });
         });
+
+        it("should fail", function (done) {
+            chai.request(localhost)
+                .post('/api/robots/Test/commands/remove_device')
+                .send({name: 'notAdevice'})
+                .end(function (err, res) {
+                    console.log("SHOULD FAIL: ",res.body);
+                    res.should.have.status(200);
+                    res.body.should.have.all.keys('success', 'result');
+                    res.body.success.should.be.equal(true);
+                    server.Cylon.devices.wemo.should.be.equal(undefined);
+                    done();
+                })
+                .catch(function(err){
+                    console.log("exception");
+                    done()
+                });
+        });
+
     });
 
 });

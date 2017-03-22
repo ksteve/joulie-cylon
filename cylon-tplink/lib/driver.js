@@ -8,12 +8,10 @@ var Driver = module.exports = function Driver(opts) {
 
   // Include a list of commands that will be made available to external APIs.
   this.commands = {
-    // This is how you register a command function for the API;
-    // the command should be added to the prototype, see below.
-      getPowerState: this.getPowerState,
-      setPowerState: this.setPowerState,
-      getConsumption: this.getConsumption,
-      getSysInfo: this.getSysInfo
+      get_power_state: this.getPowerState,
+      set_power_state: this.setPowerState,
+      get_consumption: this.getConsumption,
+      get_sys_Info: this.getSysInfo
   };
 };
 
@@ -27,21 +25,31 @@ Driver.prototype.halt = function(callback) {
   callback();
 };
 
+//commands
 Driver.prototype.getPowerState = function getPowerState(){
   return this.connection.getPowerState();
 };
 
 Driver.prototype.setPowerState = function setPowerState(opts) {
-    return new Promise(function(reject,resolve) {
-        if (opts.state !== "0" && opts.state !== "1") {
-            reject({success: false, error: "state must be either 0 or 1"});
-        }
 
-        var state = (opts.state === "1");
-        this.connection.setPowerState(state)
-            .then(resolve({sucess:true}))
-            .catch(reject());
-    });
+  if(!opts.state){
+    return ""
+  }
+
+  if (opts.state !== "0" && opts.state !== "1") {
+      reject("state must be either 0 or 1");
+  }
+
+    var state = (opts.state === "1");
+    return this.connection.setPowerState(state);
+    // return new Promise(function(reject,resolve) {
+
+    //
+    //     var state = (opts.state === "1");
+    //     this.connection.setPowerState(state)
+    //         .then(resolve("success"))
+    //         .catch(reject("error"));
+    // });
 };
 
 Driver.prototype.getConsumption = function getConsumption() {
@@ -51,5 +59,3 @@ Driver.prototype.getConsumption = function getConsumption() {
 Driver.prototype.getSysInfo = function getSysInfo(){
   return this.connection.getSysInfo();
 };
-
-

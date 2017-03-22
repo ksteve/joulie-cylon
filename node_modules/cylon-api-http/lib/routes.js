@@ -30,8 +30,13 @@ function runCommand(req, res, my, command) {
   var result = command.call(my, req.commandParams),
       promise = typeof result === "object" && typeof result.then === "function";
 
-  function respond(r) { res.json({success:true, result: r }); }
-  function error(err) { res.status(500).json({success:false, error: err }); }
+  function respond(r) {
+    res.json({success:true, result: r });
+  }
+
+  function error(err) {
+    res.status(500).json({success:false, error: err });
+  }
 
   return promise ? result.then(respond).catch(error) : respond(result);
 }
