@@ -95,11 +95,18 @@ module.exports = {
                 }
 
                 //start the connection
-                robot.startConnection(robot.connections[conn_name], function () {
-                    //start the device
-                    robot.startDevice(robot.devices[dev_name], function () {
-                        resolve(self.devices[dev.name]);
-                    });
+                robot.startConnection(robot.connections[conn_name], function (err) {
+                    if(err){
+                        reject({code: errors.COULD_NOT_CONNECT, message:err})
+                    } else {
+                        //start the device
+                        robot.startDevice(robot.devices[dev_name], function (err) {
+                            if (err) {
+                                reject({code: errors.COULD_NOT_START_DEVICE, message: err})
+                            }
+                            resolve(self.devices[dev.name]);
+                        });
+                    }
                 });
             })
         };

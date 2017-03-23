@@ -3,46 +3,49 @@ const Hs100Api = require("hs100-api");
 const Cylon = require("cylon");
 const Commands = require("./commands");
 const TpLink = new Hs100Api.Client();
+const errors = require("../../errors");
 
 
 var Adaptor = module.exports = function Adaptor(opts) {
   Adaptor.__super__.constructor.apply(this, arguments);
   opts = opts || {};
 
-    if(opts.ip){
-        this.ip = opts.ip;
-        this.port = opts.port;
-        this.host = this.ip + ":" + this.port;
-    } else if(opts.host) {
-        this.host = opts.host;
-    }
+  this.ip = opts.ip;
+
+  if(!this.ip){
+      var e =  {code:errors.MISSING_FIELD, message:"No ip specified for TP-Link adaptor. Cannot proceed"};
+      throw e;
+  }
+
+  this.port = opts.port || 9999;
+  this.host = this.ip + ":" + this.port;
+
 };
 Cylon.Utils.subclass(Adaptor, Cylon.Adaptor);
 
 Adaptor.prototype.connect = function(callback) {
 
-  if(this.ip) {
-      const plug = TpLink.getPlug({host: this.ip});
-      //plug.getInfo().then(console.log);
-      this.connector = plug;
-      this.proxyMethods(Commands, this.connector, this);
+  const plug = TpLink.getPlug({host: this.ip});
 
-      // TpLink.on('error', function(){
-      //   console.log("hello");
-      // });
-
-      return callback();
-
+  if(!plug.client) {
+      this.connector = null;
+      var err = "could not connect to tplink at " + this.host;
+      return callback(err);
   } else {
-    TpLink.startDiscovery().on('plug-new', function(plug){
-      plug.getInfo().then(console.log);
-
-      plug.getScanInfo().then(console.log);
       this.connector = plug;
       this.proxyMethods(Commands, this.connector, this);
       return callback();
-    });
   }
+  // } else {
+  //   TpLink.startDiscovery().on('plug-new', function(plug){
+  //     plug.getInfo().then(console.log);
+  //
+  //     plug.getScanInfo().then(console.log);
+  //     this.connector = plug;
+  //     this.proxyMethods(Commands, this.connector, this);
+  //     return callback();
+  //   });
+  // }
 };
 
 Adaptor.prototype.disconnect = function(callback) {
