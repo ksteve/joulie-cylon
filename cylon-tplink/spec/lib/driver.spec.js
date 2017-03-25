@@ -13,5 +13,4 @@ describe("Driver", function() {
     expect(driver).to.be.an.instanceOf(Cylon.Driver);
   });
 
-  it("needs tests");
 });

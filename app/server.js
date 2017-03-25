@@ -30,13 +30,13 @@ Cylon.robot({
 
     events: ['test', 'hello'],
     connections: {
-     //   wemo: {adaptor: "wemo", ip:'192.168.2.23', port:49153},
-    //    tplink : {adaptor: "tplink", ip:"192.168.12.102"}
+       // wemo: {adaptor: "wemo", ip:'192.168.2.23', port:49153},
+        //tplink : {adaptor: "tplink", ip:"192.168.12.102"}
     },
 
     devices: {
-     //   wemoSwitch: { driver: "wemo", connection: "wemo"},
-      //  myDevice: {driver: "tplink", connection: "tplink"}
+        //wemoSwitch: { driver: "wemo", connection: "wemo"},
+        //myDevice: {driver: "tplink", connection: "tplink"}
     },
 
     //a reference to timers which can be cleared on halt
@@ -54,7 +54,9 @@ Cylon.robot({
 });
 
 //setup MCP commands
-Cylon.MCP.commands["init_cylon"] = commands.initCylon;
 Cylon.MCP.commands["create_robot"] = commands.createRobot;
+Cylon.MCP.commands["remove_robot"] = commands.removeRobot;
+Cylon.MCP.commands["reset_robot"] = commands.resetRobot;
+
 
 module.exports.Cylon = Cylon;

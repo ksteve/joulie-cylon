@@ -2,7 +2,7 @@
   "name": "joulie_cylon",
   "version": "1.0.0",
   "description": "joulie server component for interacting with devices",
-  "main": "device-server.js",
+  "main": "app/server.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec"
   },

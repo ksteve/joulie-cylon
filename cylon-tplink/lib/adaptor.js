@@ -3,23 +3,21 @@ const Hs100Api = require("hs100-api");
 const Cylon = require("cylon");
 const Commands = require("./commands");
 const TpLink = new Hs100Api.Client();
-const errors = require("../../errors");
-
+const errors = require("../errors");
 
 var Adaptor = module.exports = function Adaptor(opts) {
+
   Adaptor.__super__.constructor.apply(this, arguments);
+
   opts = opts || {};
 
   this.ip = opts.ip;
-
   if(!this.ip){
       var e =  {code:errors.MISSING_FIELD, message:"No ip specified for TP-Link adaptor. Cannot proceed"};
       throw e;
   }
-
   this.port = opts.port || 9999;
   this.host = this.ip + ":" + this.port;
-
 };
 Cylon.Utils.subclass(Adaptor, Cylon.Adaptor);
 

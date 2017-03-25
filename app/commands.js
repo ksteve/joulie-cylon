@@ -68,6 +68,7 @@ module.exports = {
             resolve("all robots started");
         });
     },
+
     resetRobot : function resetRobot(opts) {
         return new Promise(function (resolve, reject) {
 
@@ -81,18 +82,14 @@ module.exports = {
 
             return new Promise(function (resolve, reject) {
 
-                try {
-                    var conn_name = opts.name;
-                    var conn = {adaptor: opts.type, ip: opts.ip, port: opts.port};
+                var conn_name = opts.name;
+                var conn = {adaptor: opts.type, ip: opts.ip, port: opts.port};
 
-                    var dev_name = opts.name;
-                    var dev = {driver: opts.type, connection: conn_name};
+                var dev_name = opts.name;
+                var dev = {driver: opts.type, connection: conn_name};
 
-                    robot.connection(conn_name, conn);
-                    robot.device(dev_name, dev);
-                } catch(err){
-                    console.log(err);
-                }
+                robot.connection(conn_name, conn);
+                robot.device(dev_name, dev);
 
                 //start the connection
                 robot.startConnection(robot.connections[conn_name], function (err) {
@@ -155,6 +152,29 @@ module.exports = {
                 console.log(err);
             }
             resolve({message: "Robot Created"});
+        });
+    },
+    removeRobot : function removeRobot(opts) {
+        var MCP = this;
+        opts = opts || {};
+
+        return new Promise(function(resolve, reject){
+
+            if(!opts.name){
+                reject({code: errors.MISSING_FIELD, message: "no name parameter"});
+            }
+            if(!MCP.robots[opts.name]){
+                var str = "Robot with name: " + opts.name + " does not exist.";
+                reject({code: errors.ROBOT_NOT_EXIST, message:str});
+            }
+
+            MCP.remove(opts, function(err){
+                if(err){
+                    reject({code:errors.REQUEST_FAILED, message: err});
+                }
+
+                resolve("Robot Removed");
+            });
         });
     }
 };
