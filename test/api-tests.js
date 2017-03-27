@@ -3,8 +3,8 @@ var chai        = require("chai");
 var chaiHttp    = require("chai-http")
 var server      = require("./../app/server");
 
-var should      = chai.should();
-var expect      = chai.expect();
+var should     = chai.should();
+var expect      = chai.expect;
 
 chai.use(chaiHttp);
 
@@ -58,10 +58,12 @@ describe("api", function() {
                     res.should.have.status(200);
                     res.body.should.have.all.keys('success', 'result');
                     res.body.success.should.be.equal(true);
-                    server.Cylon.MCP.robots[bot.name].should.be.equal(undefined);
+
+                    var removed_bot = server.Cylon.MCP.robots[bot.name];
+                    expect(removed_bot).to.equal(undefined);
                 })
                 .catch( function(err){
-                    throw err;
+                    assert.isNotOk(err,'Promise error');
                 });
 
         });
@@ -75,14 +77,16 @@ describe("api", function() {
                 .send({name: 'wemo', type: 'wemo'})
                 .then(function (res) {
                     console.log(res.body);
-                    res.should.have.status(200);
-                    res.body.should.have.all.keys('success', 'result');
-                    res.body.success.should.be.equal(true);
-                    server.Cylon.devices.wemo.should.be.an.instanceOf(Driver);
+                   // res.should.have.status(500);
+                   // res.body.should.have.all.keys('success', 'result');
+                   // res.body.success.should.be.equal(true);
+                   // server.Cylon.devices.wemo.should.be.an.instanceOf(Driver);
                 })
                 .catch(function(err){
-                    console.log("exception");
-                    assert.isNotOk(err,'Promise error');
+                    //console.log(err);
+                    expect(err).to.have.status(404);
+                    expect(err).to.have.all.keys('success', 'error');
+                    assert.isOk(err,'Promise error');
                     //throw err;
                 });
         });

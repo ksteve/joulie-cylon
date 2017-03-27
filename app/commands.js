@@ -4,6 +4,7 @@
 
 var _ = require("lodash");
 var errors = require("./../errors");
+var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
 
 module.exports = {
     resetRobots : function initCylon(opts) {
@@ -76,7 +77,6 @@ module.exports = {
     },
     createRobot : function createRobot(opts) {
         var MCP = this;
-
         function createDevice(opts) {
             var robot = this;
 
@@ -93,30 +93,31 @@ module.exports = {
 
                 //start the connection
                 robot.startConnection(robot.connections[conn_name], function (err) {
-                    if(err){
-                        reject({code: errors.COULD_NOT_CONNECT, message:err})
+                    if (err) {
+                        delete robot.connections[conn_name];
+                        delete robot.devices[dev_name];
+                        reject({code: errors.COULD_NOT_CONNECT, message: err})
                     } else {
                         //start the device
                         robot.startDevice(robot.devices[dev_name], function (err) {
                             if (err) {
                                 reject({code: errors.COULD_NOT_START_DEVICE, message: err})
                             }
-                            resolve(self.devices[dev.name]);
+                            resolve(robot.devices[dev.name]);
                         });
                     }
                 });
             })
         };
-
-        function deleteDevice(opts){
-            return new Promise(function(resolve,reject) {
+        function deleteDevice(opts) {
+            return new Promise(function (resolve, reject) {
                 console.log(opts);
-                var self = this;
+                var robot = this;
 
-                var device = self.devices[opts.name];
+                var device = robot.devices[opts.name];
                 if (!device) {
                     reject({
-                        code:errors.DEVICE_NOT_FOUND,
+                        code: errors.DEVICE_NOT_FOUND,
                         message: "device: " + opts.name + " not found"
                     });
                 }
@@ -135,11 +136,35 @@ module.exports = {
                 resolve("device removed");
             });
         }
+        function work(my) {
+            my.timers.push(every((15).minutes(), function () {
+                console.log(my.name);
+                //var energy = Math.floor((Math.random() * 100) + 20);
+                if (my.devices) {
+                    for (var deviceName in my.devices) {
+                        var device = my.devices[deviceName];
+                            if (device.getConsumption && device.connection.getConsumption) {
+                                device.getConsumption()
+                                    .then(function (result) {
+                                        console.log(result);
+                                        ServerSocket.emit('data publish', result);
+                                    })
+                                    .catch(function (err) {
+                                        console.log(err);
+                                    })
+                            }
+                        }
+                    }
+            }));
+        };
 
         return new Promise(function (resolve, reject) {
             if (!opts.name) {
                 reject({code: errors.MISSING_FIELD, message: "JSON must specify name"});
             }
+
+            opts.timers = [];
+            opts.work = work;
 
             //create the robot
             try {
@@ -150,6 +175,7 @@ module.exports = {
                 }
             } catch (err) {
                 console.log(err);
+                reject({message: err});
             }
             resolve({message: "Robot Created"});
         });

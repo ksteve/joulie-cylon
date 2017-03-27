@@ -5,9 +5,10 @@ var Cylon = require('./../cylon');
 var http = require("http");
 var commands = require("./commands");
 
-
-var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
-ServerSocket.emit('data publish', 'test data');
+// process.on("exit", function() {
+//    console.log("Cylon shutting down");
+//     // MCP.halt(process.kill.bind(process, process.pid));
+// });
 
 //allow robots to auto start on initialization
 Cylon.config({
@@ -36,20 +37,15 @@ Cylon.robot({
 
     devices: {
         //wemoSwitch: { driver: "wemo", connection: "wemo"},
-        //myDevice: {driver: "tplink", connection: "tplink"}
+       //myDevice: {driver: "tplink", connection: "tplink"}
     },
 
     //a reference to timers which can be cleared on halt
     timers: [],
 
     work: function(my) {
-        my.timers.push(every((5).minutes(), function() {
             console.log(my.name);
-            var energy = Math.floor((Math.random() * 100) + 20);
-            // my.switch.on('insightParams', function(){
-            //     console.log("hello");
-            // });
-        }));
+            //var energy = Math.floor((Math.random() * 100) + 20);
     }
 });
 
