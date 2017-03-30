@@ -41,6 +41,6 @@ Cylon.MCP.commands["create_robot"] = commands.createRobot;
 Cylon.MCP.commands["remove_robot"] = commands.removeRobot;
 Cylon.MCP.commands["reset_robot"] = commands.resetRobot;
 
-//Cylon.api.stop();
+//todo : ping server-core on start up to get robots and devices
 
 module.exports.Cylon = Cylon;
