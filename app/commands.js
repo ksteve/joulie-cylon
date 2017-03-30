@@ -4,11 +4,12 @@
 
 var _ = require("lodash");
 var errors = require("./../errors");
-var ServerSocket = require('socket.io-client')('https://joulie-core.herokuapp.com/api');
+var ServerSocket = require('socket.io-client')('localhost:8000/api');
 
 module.exports = {
-    resetRobots : function initCylon(opts) {
+    resetRobots : function resetRobots(opts) {
         var Cylon = this;
+        console.log('[ Joulie-Cylon ] - Resetting Robots');
         return new Promise(function (resolve, reject) {
 
             if (!opts) {
@@ -69,16 +70,19 @@ module.exports = {
             resolve("all robots started");
         });
     },
-
     resetRobot : function resetRobot(opts) {
+        console.log('[ Joulie-Cylon ] - Resetting Robot');
         return new Promise(function (resolve, reject) {
 
         })
     },
     createRobot : function createRobot(opts) {
+
+        console.log('[ Joulie-Cylon ] - Creating Robot');
         var MCP = this;
         function createDevice(opts) {
             var robot = this;
+            console.log('[ ' + robot +' ] - Creating Device');
 
             return new Promise(function (resolve, reject) {
 
@@ -110,9 +114,12 @@ module.exports = {
             })
         };
         function deleteDevice(opts) {
+            var robot = this;
+            console.log('[ ' + robot +' ] - Deleting Device');
+
             return new Promise(function (resolve, reject) {
                 console.log(opts);
-                var robot = this;
+
 
                 var device = robot.devices[opts.name];
                 if (!device) {
@@ -137,7 +144,8 @@ module.exports = {
             });
         }
         function work(my) {
-            my.timers.push(every((15).minutes(), function () {
+            my.timers.push(every((1).minutes(), function () {
+
                 console.log(my.name);
                 //var energy = Math.floor((Math.random() * 100) + 20);
                 if (my.devices) {
@@ -181,6 +189,7 @@ module.exports = {
         });
     },
     removeRobot : function removeRobot(opts) {
+        console.log('[ Joulie-Cylon ] - Removing Robot');
         var MCP = this;
         opts = opts || {};
 

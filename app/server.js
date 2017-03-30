@@ -5,11 +5,6 @@ var Cylon = require('./../cylon');
 var http = require("http");
 var commands = require("./commands");
 
-// process.on("exit", function() {
-//    console.log("Cylon shutting down");
-//     // MCP.halt(process.kill.bind(process, process.pid));
-// });
-
 //allow robots to auto start on initialization
 Cylon.config({
     mode: 'auto'
@@ -38,14 +33,6 @@ Cylon.robot({
     devices: {
         //wemoSwitch: { driver: "wemo", connection: "wemo"},
        //myDevice: {driver: "tplink", connection: "tplink"}
-    },
-
-    //a reference to timers which can be cleared on halt
-    timers: [],
-
-    work: function(my) {
-            console.log(my.name);
-            //var energy = Math.floor((Math.random() * 100) + 20);
     }
 });
 
@@ -54,5 +41,6 @@ Cylon.MCP.commands["create_robot"] = commands.createRobot;
 Cylon.MCP.commands["remove_robot"] = commands.removeRobot;
 Cylon.MCP.commands["reset_robot"] = commands.resetRobot;
 
+//Cylon.api.stop();
 
 module.exports.Cylon = Cylon;

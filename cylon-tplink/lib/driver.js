@@ -53,7 +53,18 @@ Driver.prototype.setPowerState = function setPowerState(opts) {
 };
 
 Driver.prototype.getConsumption = function getConsumption() {
-  return this.connection.getConsumption();
+    var driver = this;
+    return new Promise(function(resolve, reject) {
+        driver.connection.getConsumption()
+            .then(function (result) {
+                var power = result.get_realtime.power;
+                power = (power / 1000);
+                resolve({kw: power});
+            })
+            .catch(function(err) {
+                reject(err);
+            });
+    });
 };
 
 Driver.prototype.getSysInfo = function getSysInfo(){
