@@ -120,7 +120,7 @@ module.exports = {
             return new Promise(function (resolve, reject) {
                 console.log(opts);
 
-
+                //check if device exits
                 var device = robot.devices[opts.name];
                 if (!device) {
                     reject({
@@ -129,18 +129,17 @@ module.exports = {
                     });
                 }
 
+                //delete the devices connection first
                 var connection = device.connection;
                 if (connection) {
                     this.removeConnection(connection, function () {
                         console.log("connection removed");
+                        this.removeDevice(device, function () {
+                            console.log("device removed");
+                            resolve("device removed");
+                        });
                     });
                 }
-
-                this.removeDevice(device, function () {
-                    console.log("device removed");
-                });
-
-                resolve("device removed");
             });
         }
         function work(my) {

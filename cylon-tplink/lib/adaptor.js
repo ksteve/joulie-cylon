@@ -1,8 +1,8 @@
 "use strict";
-const Hs100Api = require("hs100-api");
-const Cylon = require("cylon");
-const Commands = require("./commands");
-const errors = require("../errors");
+var Hs100Api = require("hs100-api");
+var Cylon = require("cylon");
+var Commands = require("./commands");
+var errors = require("../errors");
 
 var Adaptor = module.exports = function Adaptor(opts) {
 
