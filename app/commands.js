@@ -4,6 +4,7 @@
 
 var _ = require("lodash");
 var errors = require("./../errors");
+var Promise = require('es6-promise').Promise;
 var ServerSocket = require('socket.io-client')('localhost:8000/api');
 
 module.exports = {
@@ -77,7 +78,6 @@ module.exports = {
         })
     },
     createRobot : function createRobot(opts) {
-
         console.log('[ Joulie-Cylon ] - Creating Robot');
         var MCP = this;
         function createDevice(opts) {
