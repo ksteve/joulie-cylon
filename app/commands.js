@@ -132,9 +132,9 @@ module.exports = {
                 //delete the devices connection first
                 var connection = device.connection;
                 if (connection) {
-                    this.removeConnection(connection, function () {
+                    robot.removeConnection(connection, function () {
                         console.log("connection removed");
-                        this.removeDevice(device, function () {
+                        robot.removeDevice(device, function () {
                             console.log("device removed");
                             resolve("device removed");
                         });
