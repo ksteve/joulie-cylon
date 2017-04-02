@@ -4,7 +4,6 @@
 
 var _ = require("lodash");
 var errors = require("./../errors");
-var Promise = require('es6-promise').Promise;
 var ServerSocket = require('socket.io-client')('localhost:8000/api');
 
 module.exports = {
