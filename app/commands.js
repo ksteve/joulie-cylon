@@ -85,6 +85,14 @@ module.exports = {
 
             return new Promise(function (resolve, reject) {
 
+                if(opts.type == 1){
+                    opts.type = 'wemo'
+                } else if ((opts.type == 2)) {
+                    opts.type = 'tplink'
+                } else {
+                    reject({code: errors.MISSING_FIELD, message: "not a valid device type"});
+                }
+
                 var conn_name = opts.name;
                 var conn = {adaptor: opts.type, ip: opts.ip, port: opts.port};
 
