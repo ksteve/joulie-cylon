@@ -20,26 +20,13 @@ Cylon.api(
         port: PORT
 });
 
-//setup test robot
-Cylon.robot({
-    name: "Test",
-
-    events: ['test', 'hello'],
-    connections: {
-       // wemo: {adaptor: "wemo", ip:'192.168.2.23', port:49153},
-        //tplink : {adaptor: "tplink", ip:"192.168.12.102"}
-    },
-
-    devices: {
-        //wemoSwitch: { driver: "wemo", connection: "wemo"},
-       //myDevice: {driver: "tplink", connection: "tplink"}
-    }
-});
-
 //setup MCP commands
 Cylon.MCP.commands["create_robot"] = commands.createRobot;
 Cylon.MCP.commands["remove_robot"] = commands.removeRobot;
 Cylon.MCP.commands["reset_robot"] = commands.resetRobot;
+
+//start a test robot
+commands.createRobot.call(Cylon.MCP, {name: "test"});
 
 //todo : ping server-core on start up to get robots and devices
 

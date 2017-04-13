@@ -31,11 +31,6 @@ module.exports = {
 
                         work: function (my) {
                             my.connections;
-                            // {
-                            //   loopback: [Connection],
-                            //   arduino:  [Connection]
-                            // }
-
                             my.arduino;  // [Connection]
                             my.loopback; // [Device]
                         }
@@ -77,28 +72,31 @@ module.exports = {
         })
     },
     createRobot : function createRobot(opts) {
-        console.log('[ Joulie-Cylon ] - Creating Robot');
         var MCP = this;
+
         function createDevice(opts) {
             var robot = this;
-            console.log('[ ' + robot +' ] - Creating Device');
 
             return new Promise(function (resolve, reject) {
+                console.log('[ ' + robot +' ] - Creating Device');
 
                 if(opts.type == 1){
                     opts.type = 'wemo'
-                } else if ((opts.type == 2)) {
+                } else if (opts.type == 2) {
                     opts.type = 'tplink'
                 } else {
                     reject({code: errors.MISSING_FIELD, message: "not a valid device type"});
                 }
 
+                //create connection object
                 var conn_name = opts.name;
                 var conn = {adaptor: opts.type, ip: opts.ip, port: opts.port};
 
+                //create device object
                 var dev_name = opts.name;
                 var dev = {driver: opts.type, connection: conn_name};
 
+                //add new device and connection
                 robot.connection(conn_name, conn);
                 robot.device(dev_name, dev);
 
@@ -120,6 +118,7 @@ module.exports = {
                 });
             })
         };
+
         function deleteDevice(opts) {
             var robot = this;
             console.log('[ ' + robot +' ] - Deleting Device');
@@ -148,31 +147,29 @@ module.exports = {
                     });
                 }
             });
-        }
-        function work(my) {
-            my.timers.push(every((1).minutes(), function () {
+        };
 
-                console.log(my.name);
-                //var energy = Math.floor((Math.random() * 100) + 20);
-                if (my.devices) {
-                    for (var deviceName in my.devices) {
-                        var device = my.devices[deviceName];
-                            if (device.getConsumption && device.connection.getConsumption) {
-                                device.getConsumption()
-                                    .then(function (result) {
-                                        console.log(result);
-                                        ServerSocket.emit('data publish', result);
-                                    })
-                                    .catch(function (err) {
-                                        console.log(err);
-                                    })
-                            }
-                        }
-                    }
+        function work(my) {
+            my.timers.push(every((15).minutes(), function () {
+                _.forEach(my.devices,function(device, device_id){
+                    if (device.getConsumption && device.connection.getConsumption) {
+                        device.getConsumption()
+                            .then(function (result) {
+                                result.uuid = device.name;
+                                console.log(result);
+                                ServerSocket.emit('data publish', result);
+                            })
+                            .catch(function (err) {
+                                console.log(err);
+                            })
+                    }                    
+                });
             }));
         };
 
         return new Promise(function (resolve, reject) {
+            console.log('[ Joulie-Cylon ] - Creating Robot');
+
             if (!opts.name) {
                 reject({code: errors.MISSING_FIELD, message: "JSON must specify name"});
             }
@@ -195,11 +192,11 @@ module.exports = {
         });
     },
     removeRobot : function removeRobot(opts) {
-        console.log('[ Joulie-Cylon ] - Removing Robot');
         var MCP = this;
         opts = opts || {};
 
         return new Promise(function(resolve, reject){
+            console.log('[ Joulie-Cylon ] - Removing Robot');
 
             if(!opts.name){
                 reject({code: errors.MISSING_FIELD, message: "no name parameter"});
@@ -213,7 +210,6 @@ module.exports = {
                 if(err){
                     reject({code:errors.REQUEST_FAILED, message: err});
                 }
-
                 resolve("Robot Removed");
             });
         });
