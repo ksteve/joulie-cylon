@@ -4,7 +4,7 @@
 
 var _ = require("lodash");
 var errors = require("./../errors");
-var ServerSocket = require('socket.io-client')('localhost:8000/api');
+//var ServerSocket = require('socket.io-client')('localhost:8000/api');
 
 module.exports = {
     resetRobots : function resetRobots(opts) {
@@ -157,7 +157,7 @@ module.exports = {
                             .then(function (result) {
                                 result.uuid = device.name;
                                 console.log(result);
-                                ServerSocket.emit('data publish', result);
+                               // ServerSocket.emit('data publish', result);
                             })
                             .catch(function (err) {
                                 console.log(err);
