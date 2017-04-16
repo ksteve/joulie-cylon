@@ -4,7 +4,7 @@
 
 var _ = require("lodash");
 var errors = require("./../errors");
-//var ServerSocket = require('socket.io-client')('localhost:8000/api');
+var ServerSocket = require('socket.io-client')('localhost:8000/api');
 
 module.exports = {
     resetRobots : function resetRobots(opts) {
@@ -150,14 +150,14 @@ module.exports = {
         };
 
         function work(my) {
-            my.timers.push(every((15).minutes(), function () {
                 _.forEach(my.devices,function(device, device_id){
                     if (device.getConsumption && device.connection.getConsumption) {
                         device.getConsumption()
                             .then(function (result) {
                                 result.uuid = device.name;
                                 console.log(result);
-                               // ServerSocket.emit('data publish', result);
+                                result = JSON.stringify(result);
+                                ServerSocket.emit('data publish', result);
                             })
                             .catch(function (err) {
                                 console.log(err);
