@@ -6,6 +6,10 @@ var _ = require("lodash");
 var errors = require("./../errors");
 var ServerSocket = require('socket.io-client')('localhost:8000/api');
 
+ServerSocket.on('connect', function(data){
+    console.log(data);
+});
+
 module.exports = {
     resetRobots : function resetRobots(opts) {
         var Cylon = this;
@@ -156,8 +160,8 @@ module.exports = {
                         device.getConsumption()
                             .then(function (result) {
                                 result.uuid = device.name;
-                                console.log(result);
                                 result = JSON.stringify(result);
+                                console.log(result);
                                 ServerSocket.emit('data publish', result);
                             })
                             .catch(function (err) {
