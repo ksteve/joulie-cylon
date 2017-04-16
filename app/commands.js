@@ -4,7 +4,7 @@
 
 var _ = require("lodash");
 var errors = require("./../errors");
-var ServerSocket = require('socket.io-client')('localhost:8000/api');
+var ServerSocket = require('socket.io-client')('http://localhost:8000/api');
 
 ServerSocket.on('connect', function(data){
     console.log(data);
