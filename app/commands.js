@@ -84,9 +84,9 @@ module.exports = {
             return new Promise(function (resolve, reject) {
                 console.log('[ ' + robot +' ] - Creating Device');
 
-                if(opts.type == 1){
+                if(opts.type == 1 || opts.type == 'wemo'){
                     opts.type = 'wemo'
-                } else if (opts.type == 2) {
+                } else if (opts.type == 2 || opts.type == 'tplink') {
                     opts.type = 'tplink'
                 } else {
                     reject({code: errors.MISSING_FIELD, message: "not a valid device type"});
