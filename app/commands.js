@@ -83,6 +83,7 @@ module.exports = {
 
             return new Promise(function (resolve, reject) {
                 console.log('[ ' + robot +' ] - Creating Device');
+                console.log(opts);
 
                 if(opts.type == 1 || opts.type == 'wemo'){
                     opts.type = 'wemo'
