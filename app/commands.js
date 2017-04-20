@@ -155,7 +155,7 @@ module.exports = {
         };
 
         function work(my) {
-            my.timers.push(every((1).minutes(), function () {
+            my.timers.push(every((15).minutes(), function () {
                 _.forEach(my.devices,function(device, device_id){
                     if (device.getConsumption && device.connection.getConsumption) {
                         device.getConsumption()
