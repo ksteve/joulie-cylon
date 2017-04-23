@@ -92,7 +92,7 @@ module.exports = {
                     return;
                 }
 
-                if(!opts.tpye || !opts.name || !opts.ip){
+                if(!opts.type || !opts.name || !opts.ip){
                     reject({code: errors.MISSING_FIELD, message: "missing json field(s)"});
                     return;
                 }
