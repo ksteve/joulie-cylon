@@ -91,6 +91,10 @@ module.exports = {
                     reject({code: errors.MISSING_BODY, message: "missing json body"});
                 }
 
+                if(!opts.tpye || !opts.name || !opts.ip){
+                    reject({code: errors.MISSING_FIELD, message: "missing json field(s)"});
+                }
+
                 if(opts.type == 1 || opts.type == 'wemo'){
                     opts.type = 'wemo'
                 } else if (opts.type == 2 || opts.type == 'tplink') {
