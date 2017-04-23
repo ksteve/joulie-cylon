@@ -89,10 +89,12 @@ module.exports = {
 
                 if(!opts){
                     reject({code: errors.MISSING_BODY, message: "missing json body"});
+                    return;
                 }
 
                 if(!opts.tpye || !opts.name || !opts.ip){
                     reject({code: errors.MISSING_FIELD, message: "missing json field(s)"});
+                    return;
                 }
 
                 if(opts.type == 1 || opts.type == 'wemo'){
@@ -143,6 +145,7 @@ module.exports = {
 
                 if(!opts){
                     reject({code: errors.MISSING_BODY, message: "missing json body"});
+                    return;
                 }
 
                 //check if device exits
