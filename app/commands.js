@@ -1,6 +1,8 @@
+"use strcit";
 /**
  * Created by Kyle on 2017-02-24.
  */
+
 
 var _ = require("lodash");
 var errors = require("./../errors");
@@ -85,6 +87,10 @@ module.exports = {
                 console.log('[ ' + robot +' ] - Creating Device');
                 console.log(opts);
 
+                if(!opts){
+                    reject({code: errors.MISSING_BODY, message: "missing json body"});
+                }
+
                 if(opts.type == 1 || opts.type == 'wemo'){
                     opts.type = 'wemo'
                 } else if (opts.type == 2 || opts.type == 'tplink') {
@@ -131,6 +137,10 @@ module.exports = {
             return new Promise(function (resolve, reject) {
                 console.log(opts);
 
+                if(!opts){
+                    reject({code: errors.MISSING_BODY, message: "missing json body"});
+                }
+
                 //check if device exits
                 var device = robot.devices[opts.name];
                 if (!device) {
@@ -175,6 +185,10 @@ module.exports = {
 
         return new Promise(function (resolve, reject) {
             console.log('[ Joulie-Cylon ] - Creating Robot');
+
+            if(!opts){
+                reject({code: errors.MISSING_BODY, message: "missing json body"});
+            }
 
             if (!opts.name) {
                 reject({code: errors.MISSING_FIELD, message: "JSON must specify name"});
