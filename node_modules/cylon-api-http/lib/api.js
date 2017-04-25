@@ -86,7 +86,6 @@ API.prototype.configureMiddleware = function configureMiddleware() {
 
   // set CORS headers for API requests
   this.express.use(function(req, res, next) {
-    console.log(req);
     res.set("Access-Control-Allow-Origin", this.CORS || "*");
     res.set("Access-Control-Allow-Headers", "Content-Type");
     res.set("Content-Type", "application/json");
