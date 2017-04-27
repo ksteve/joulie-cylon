@@ -28,7 +28,23 @@ Driver.prototype.halt = function(callback) {
 //commands
 Driver.prototype.getPowerState = function getPowerState(){
     console.log("[ joulie-cylon ] - tplink - get_power_state");
-  return this.connection.getPowerState();
+
+    var driver = this;
+    
+    return new Promise(function(resolve, reject){
+        driver.connection.getPowerState()
+        .then(function(result){
+            if(result){
+                result = 1;
+            } else {
+                result = 0;
+            }
+            resolve({state: result});
+        })
+        .catch(function(err){
+            reject(err);
+        })
+    });
 };
 
 Driver.prototype.setPowerState = function setPowerState(opts) {

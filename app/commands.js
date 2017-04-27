@@ -188,6 +188,24 @@ module.exports = {
                     }                    
                 });
             }));
+
+            my.timers.push(every((1).minutes(), function () {
+                _.forEach(my.devices,function(device, device_id){
+                    if (device.getPowerState && device.connection.getPowerState) {
+                        device.getPowerState()
+                            .then(function (result) {
+                                result.uuid = device.name;
+                                result = JSON.stringify(result);
+                                console.log(result);
+                                ServerSocket.emit('device state', result);
+                            })
+                            .catch(function (err) {
+                                console.log(err);
+                            })
+                    }                    
+                });
+            }));
+
         };
 
         return new Promise(function (resolve, reject) {
